@@ -46,7 +46,8 @@ find_package(Leatherman REQUIRED
   COMPONENTS locale nowide catch logging rapidjson json_container util)
 find_package(Boost 1.54 REQUIRED
   COMPONENTS filesystem chrono system date_time thread log regex random)
-find_package(OpenSSL REQUIRED)
+#find_package(OpenSSL REQUIRED)
+find_package(OpenSSL)
 # Needed for linking on AIX
 find_package(Threads)
 
@@ -73,13 +74,19 @@ file(GLOB_RECURSE PCP_CLIENT_SOURCES */src/*.cc */inc/*.hpp)
 gettext_templates(${CMAKE_CURRENT_SOURCE_DIR}/locales ${PCP_CLIENT_SOURCES})
 
 # Prefer openssl from ports
-if ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
-    set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /opt/local/lib)
-    set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /opt/local/include)
-else()
-    set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /usr/lib)
-    set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include)
-endif()
+# FIPS experimentation - make it pick openssl from standard location..
+
+set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /usr/lib)
+set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include)
+
+
+#if ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
+#    set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /opt/local/lib)
+#    set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /opt/local/include)
+#else()
+#    set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /usr/lib)
+#    set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include)
+#endif()
 
 # Include vendor libraries and directories
 include(${VENDOR_DIRECTORY}/websocketpp.cmake)
